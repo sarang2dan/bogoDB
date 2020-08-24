@@ -7,6 +7,7 @@ import (
 	"github.com/ad-sho-loko/bogodb/db"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 )
@@ -20,15 +21,20 @@ func client() {
 	showTitle()
 	stdin := bufio.NewScanner(os.Stdin)
 	for {
-		fmt.Print(">>")
+		fmt.Print(">> ")
 		stdin.Scan()
 		q := stdin.Text()
+
+		if strings.HasPrefix(q, "quit") {
+			return
+		}
 
 		var err error
 		if strings.HasPrefix(q, "exit") {
 			_, err = http.Get("http://localhost:32198/exit")
 		} else {
-			_, err = http.Get("http://localhost:32198/execute?query=" + q)
+			escapedQry := "http://localhost:32198/execute?query=" + url.PathEscape(q)
+			_, err = http.Get(escapedQry)
 		}
 
 		if err != nil {

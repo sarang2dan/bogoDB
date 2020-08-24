@@ -3,6 +3,7 @@ package db
 import (
 	"log"
 	"net/http"
+	"net/url"
 )
 
 type ApiServer struct {
@@ -24,8 +25,9 @@ func (a *ApiServer) executeHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	unescapedQry, _ := url.PathUnescape(q[0])
 
-	res, err := a.db.Execute(q[0], r.UserAgent())
+	res, err := a.db.Execute(unescapedQry, r.UserAgent())
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))

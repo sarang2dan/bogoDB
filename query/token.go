@@ -146,8 +146,12 @@ func (t *Tokenizer) scanNumber() string {
 func (t *Tokenizer) scanString() string {
 	var out []uint8
 	for !t.isEnd() && !t.isSpace() {
-		out = append(out, t.input[t.pos])
-		t.pos++
+		if t.isAsciiChar() || t.isNumber() || t.input[t.pos] == '_' {
+			out = append(out, t.input[t.pos])
+			t.pos++
+		} else {
+			break
+		}
 	}
 	return string(out)
 }

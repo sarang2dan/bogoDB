@@ -169,7 +169,8 @@ func (p *Parser) insertTableStmt() Stmt {
 func (p *Parser) createTableStmt() Stmt {
 	p.expect(TABLE)
 	tblName := p.expect(STRING)
-	p.expect(LBRACE)
+
+	p.expect(LPAREN)
 
 	var colNames []string
 	var colTypes []string
@@ -190,7 +191,7 @@ func (p *Parser) createTableStmt() Stmt {
 		}
 	}
 
-	p.expect(RBRACE)
+	p.expect(RPAREN)
 
 	return &CreateTableStmt{
 		TableName:  tblName.str,
